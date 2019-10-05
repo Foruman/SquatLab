@@ -1,0 +1,111 @@
+<html>
+
+<head>
+	
+	<h1> Squat Lab </h1>
+	
+</head>
+
+
+<body>
+	
+	<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
+	</canvas> 
+	<br>
+
+	<label for="r12in"> foot length </label>
+	<input id="r12in" type="range">
+	<output id="r12out" for="r12in">  </output>
+	<br>
+	
+	<label for="r23in"> shin length </label>
+	<input id="r23in" type="range">
+	<output id="r23out" for="r23in">  </output>
+	<br>
+	
+	<label for="r34in"> thigh length </label>
+	<input id="r34in" type="range">
+	<output id="r34out" for="r34in">  </output>
+	<br>
+	
+	<label for="r45in"> torso length </label>
+	<input id="r45in" type="range">
+	<output id="r45out" for="r45in">  </output>
+	
+	
+</body>
+
+
+<script>
+	
+	
+	var width = 600;
+	var height = 300;
+	var ctx = document.getElementById("myCanvas").getContext("2d");
+	var x0 = width*0.5;
+	var y0 = height*0.75;
+	var r12 = 30;
+	var r23 = 50;
+	var r34 = 50;
+	var r45 = 60;
+	
+	window.onload = atStart;
+	document.getElementById("r12in").addEventListener("input",update);
+	document.getElementById("r23in").addEventListener("input",update);
+	document.getElementById("r34in").addEventListener("input",update);
+	document.getElementById("r45in").addEventListener("input",update);
+	
+	function atStart()
+	{	
+		// initialize
+		document.getElementById("myCanvas").width = width; 
+		document.getElementById("myCanvas").height = height; 
+		
+		document.getElementById("r12in").value = r12; 
+		document.getElementById("r12in").max = 2*r12; 
+		
+		document.getElementById("r23in").value = r23; 
+		document.getElementById("r23in").max = 2*r23; 
+		
+		document.getElementById("r34in").value = r34; 
+		document.getElementById("r34in").max = 2*r34; 
+		
+		document.getElementById("r45in").value = r45; 
+		document.getElementById("r45in").max = 2*r45; 
+		
+		update();
+
+	}
+	
+	function update()
+	{		 
+		r12 = document.getElementById("r12in").value; 
+		document.getElementById("r12out").innerHTML = r12 + "cm";
+	 
+		r23 = document.getElementById("r23in").value; 
+		document.getElementById("r23out").innerHTML = r23 + "cm";
+	 
+		r34 = document.getElementById("r34in").value; 
+		document.getElementById("r34out").innerHTML = r34 + "cm";
+
+		r45 = document.getElementById("r45in").value; 
+		document.getElementById("r45out").innerHTML = r45 + "cm";
+		
+		draw();
+	}
+	
+	function draw()
+	{
+		ctx.clearRect(0, 0, width, height); 
+		ctx.beginPath();
+		
+		ctx.moveTo(x0, y0);
+		ctx.lineTo(x0, y0-r23);
+		
+		ctx.stroke(); 
+	}
+	
+	
+</script>
+
+</html>
