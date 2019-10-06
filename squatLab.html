@@ -31,7 +31,19 @@
 	<label for="r45in"> torso length </label>
 	<input id="r45in" type="range">
 	<output id="r45out" for="r45in">  </output>
+	<br>
 	
+	<br>
+	
+	<label for="kneein"> knee position </label>
+	<input id="kneein" type="range">
+	<output id="kneeout" for="kneein">  </output>
+	<br>
+	
+	<label for="alphain"> thigh angle </label>
+	<input id="alphain" type="range">
+	<output id="alphaout" for="alphain">  </output>
+	<br>
 	
 </body>
 
@@ -50,8 +62,8 @@
 	var r45 = 60;
 	
 	//var phi = 45*2*Math.PI/360;
-	//var alpha = 0;
-	var knee = 1;
+	var alpha = 0;
+	var knee = 100;
 	
 	var x1,y1,x2,y2,x3,y3,x4,y4,x5,y5;
 	
@@ -61,6 +73,8 @@
 	document.getElementById("r23in").addEventListener("input",update);
 	document.getElementById("r34in").addEventListener("input",update);
 	document.getElementById("r45in").addEventListener("input",update);
+	document.getElementById("kneein").addEventListener("input",update);
+	document.getElementById("alphain").addEventListener("input",update);
 	
 	function atStart()
 	{	
@@ -84,6 +98,13 @@
 		document.getElementById("r45in").max = 2*r45; 
 		//document.getElementById("r45in").min = 0.5*r45; 
 		
+		document.getElementById("kneein").value = knee; 
+		document.getElementById("kneein").max = 2*knee; 
+		
+		document.getElementById("alphain").value = 0; 
+		document.getElementById("alphain").max = 105; 
+		document.getElementById("alphain").min = -15;
+		
 		update();
 
 	}
@@ -101,6 +122,12 @@
 
 		r45 = document.getElementById("r45in").value; 
 		document.getElementById("r45out").innerHTML = r45 + "cm";
+		
+		knee = document.getElementById("kneein").value; 
+		document.getElementById("kneeout").innerHTML = knee + "% of toes";
+		
+		alpha = document.getElementById("alphain").value; 
+		document.getElementById("alphaout").innerHTML = alpha + "° against ground";
 		
 		draw();
 	}
@@ -121,9 +148,15 @@
 		ctx.lineTo(x5, y5);
 		
 		ctx.stroke(); 
+		
+		ctx.beginPath();
+		ctx.arc(x5, y5, 10, 0, 2 * Math.PI);
+		ctx.fill(); 
+		
+		ctx.stroke(); 
 	}
 	
-	function calcPoints()
+	function calcPoints0()
 	{
 		x1 = x0+0.5*r12;
 		y1 = y0;
@@ -131,16 +164,15 @@
 		x2 = x0-0.5*r12;
 		y2 = y0;
 		
-		x3 = x2+r12*knee;
+		x3 = x2+r12*knee/100;
 		y3 = y2-Math.pow(r23*r23-(x3-x2)*(x3-x2),0.5);
 		
-		x4 = x3-r34;
-		y4 = y3;
+		x4 = x3-r34*Math.cos(alpha*2*Math.PI/360);
+		y4 = y3-r34*Math.sin(alpha*2*Math.PI/360);
 		
 		x5 = x0;
 		y5 = y4-Math.pow(r45*r45-(x5-x4)*(x5-x4),0.5);
-		
-		
+			
 	}
 	
 	
