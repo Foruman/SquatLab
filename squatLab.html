@@ -49,6 +49,13 @@
 	var r34 = 50;
 	var r45 = 60;
 	
+	//var phi = 45*2*Math.PI/360;
+	//var alpha = 0;
+	var knee = 1;
+	
+	var x1,y1,x2,y2,x3,y3,x4,y4,x5,y5;
+	
+	
 	window.onload = atStart;
 	document.getElementById("r12in").addEventListener("input",update);
 	document.getElementById("r23in").addEventListener("input",update);
@@ -63,15 +70,19 @@
 		
 		document.getElementById("r12in").value = r12; 
 		document.getElementById("r12in").max = 2*r12; 
+		//document.getElementById("r12in").min = 0.5*r12; 
 		
 		document.getElementById("r23in").value = r23; 
 		document.getElementById("r23in").max = 2*r23; 
+		//document.getElementById("r23in").min = 0.5*r23; 
 		
 		document.getElementById("r34in").value = r34; 
 		document.getElementById("r34in").max = 2*r34; 
+		//document.getElementById("r34in").min = 0.5*r34; 
 		
 		document.getElementById("r45in").value = r45; 
 		document.getElementById("r45in").max = 2*r45; 
+		//document.getElementById("r45in").min = 0.5*r45; 
 		
 		update();
 
@@ -94,18 +105,46 @@
 		draw();
 	}
 	
+	
 	function draw()
 	{
+		
+		calcPoints();
+		
 		ctx.clearRect(0, 0, width, height); 
 		ctx.beginPath();
 		
-		ctx.moveTo(x0, y0);
-		ctx.lineTo(x0, y0-r23);
+		ctx.moveTo(x1, y1);
+		ctx.lineTo(x2, y2);
+		ctx.lineTo(x3, y3);
+		ctx.lineTo(x4, y4);
+		ctx.lineTo(x5, y5);
 		
 		ctx.stroke(); 
+	}
+	
+	function calcPoints()
+	{
+		x1 = x0+0.5*r12;
+		y1 = y0;
+		
+		x2 = x0-0.5*r12;
+		y2 = y0;
+		
+		x3 = x2+r12*knee;
+		y3 = y2-Math.pow(r23*r23-(x3-x2)*(x3-x2),0.5);
+		
+		x4 = x3-r34;
+		y4 = y3;
+		
+		x5 = x0;
+		y5 = y4-Math.pow(r45*r45-(x5-x4)*(x5-x4),0.5);
+		
+		
 	}
 	
 	
 </script>
 
 </html>
+
