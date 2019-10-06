@@ -68,6 +68,10 @@
 	var x1,y1,x2,y2,x3,y3,x4,y4,x5,y5;
 	
 	
+	var img = new Image();
+	img.src = 'Unbenannt.gif';
+	
+	
 	window.onload = atStart;
 	document.getElementById("r12in").addEventListener("input",update);
 	document.getElementById("r23in").addEventListener("input",update);
@@ -166,6 +170,15 @@
 		ctx.beginPath();
 		ctx.arc(x4, y4, 10, - Math.PI/16 - Math.abs(Math.atan((y4-y5)/(x5-x4))), Math.PI/16 + Math.atan((y4-y3)/(x4-x3)));		
 		ctx.stroke(); 
+		
+		
+		ctx.rotate(alpha*Math.PI/180);
+		
+		ctx.drawImage(img, 100, 100);
+		ctx.rotate(-alpha*Math.PI/180);
+		
+		
+		
 	}
 	
 	function calcPoints()
