@@ -35,7 +35,7 @@
 	
 	<br>
 	
-	<label for="kneein"> knee position </label>
+	<label for="kneein"> knee/(knee+hip) torque </label>
 	<input id="kneein" type="range">
 	<output id="kneeout" for="kneein">  </output>
 	<br>
@@ -56,10 +56,10 @@
 	var ctx = document.getElementById("myCanvas").getContext("2d");
 	var x0 = width*0.5;
 	var y0 = height*0.75;
-	var r12 = 30;
+	var r12 = 20;
 	var r23 = 50;
-	var r34 = 50;
-	var r45 = 60;
+	var r34 = 40;
+	var r45 = 75;
 	
 	//var phi = 45*2*Math.PI/360;
 	var alpha = 0;
@@ -98,11 +98,12 @@
 		document.getElementById("r45in").max = 2*r45; 
 		//document.getElementById("r45in").min = 0.5*r45; 
 		
-		document.getElementById("kneein").value = knee; 
-		document.getElementById("kneein").max = 2*knee; 
+		document.getElementById("kneein").value = 0.5*knee; 
+		document.getElementById("kneein").max = 1.0*knee; 
+		document.getElementById("kneein").min = -0.25*knee; 
 		
 		document.getElementById("alphain").value = 0; 
-		document.getElementById("alphain").max = 105; 
+		document.getElementById("alphain").max = 95; 
 		document.getElementById("alphain").min = -15;
 		
 		update();
@@ -124,10 +125,10 @@
 		document.getElementById("r45out").innerHTML = r45 + "cm";
 		
 		knee = document.getElementById("kneein").value; 
-		document.getElementById("kneeout").innerHTML = knee + "% of toes";
+		document.getElementById("kneeout").innerHTML = knee + "%";
 		
 		alpha = document.getElementById("alphain").value; 
-		document.getElementById("alphaout").innerHTML = alpha + "° against ground";
+		document.getElementById("alphaout").innerHTML = alpha + "°";
 		
 		draw();
 	}
@@ -139,20 +140,31 @@
 		calcPoints();
 		
 		ctx.clearRect(0, 0, width, height); 
-		ctx.beginPath();
 		
+		ctx.beginPath();
 		ctx.moveTo(x1, y1);
 		ctx.lineTo(x2, y2);
 		ctx.lineTo(x3, y3);
 		ctx.lineTo(x4, y4);
 		ctx.lineTo(x5, y5);
-		
 		ctx.stroke(); 
 		
 		ctx.beginPath();
 		ctx.arc(x5, y5, 10, 0, 2 * Math.PI);
-		ctx.fill(); 
+		ctx.fill(); 		
+		ctx.stroke(); 
 		
+		ctx.beginPath();
+		ctx.arc(x2, y2, 10, - Math.PI/16 - Math.atan((y2-y3)/(x3-x2)), Math.PI/16 + Math.atan((y2-y1)/(x2-x1)));		
+		ctx.stroke(); 
+		
+		ctx.beginPath();
+		//ctx.arc(x3, y3, 10, -Math.PI - 0*Math.PI/16 - Math.atan((y3-y4)/(x4-x3)), -Math.PI + 0*Math.PI/16 + Math.atan((y3-y2)/(x3-x2)));		
+		ctx.arc(x3, y3, 10, -Math.PI - Math.PI/16 + Math.atan((y3-y2)/(x3-x2)), -Math.PI + Math.PI/16 - Math.atan((y3-y4)/(x4-x3)));		
+		ctx.stroke(); 
+		
+		ctx.beginPath();
+		ctx.arc(x4, y4, 10, - Math.PI/16 - Math.abs(Math.atan((y4-y5)/(x5-x4))), Math.PI/16 + Math.atan((y4-y3)/(x4-x3)));		
 		ctx.stroke(); 
 	}
 	
@@ -164,11 +176,20 @@
 		x2 = x0-0.5*r12;
 		y2 = y0;
 		
-		x3 = x2+r12*knee/100;
+		//x3 = x2+r12*knee/100;
+		//y3 = y2-Math.pow(r23*r23-(x3-x2)*(x3-x2),0.5);
+		
+		x3 = x0+(knee/100)*r34*Math.cos(alpha*2*Math.PI/360);
 		y3 = y2-Math.pow(r23*r23-(x3-x2)*(x3-x2),0.5);
 		
-		x4 = x3-r34*Math.cos(alpha*2*Math.PI/360);
-		y4 = y3-r34*Math.sin(alpha*2*Math.PI/360);
+		//x4 = x3-r34*Math.cos(alpha*2*Math.PI/360);
+		//y4 = y3-r34*Math.sin(alpha*2*Math.PI/360);
+		
+		x4 = x0-(1-knee/100)*r34*Math.cos(alpha*2*Math.PI/360);
+		if (alpha>0)
+			y4 = y3-Math.pow(r34*r34-(x4-x3)*(x4-x3),0.5);
+		else
+			y4 = y3+Math.pow(r34*r34-(x4-x3)*(x4-x3),0.5);
 		
 		x5 = x0;
 		y5 = y4-Math.pow(r45*r45-(x5-x4)*(x5-x4),0.5);
