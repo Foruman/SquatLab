@@ -18,12 +18,12 @@
 	<output id="r12out" for="r12in">  </output>
 	<br>
 	
-	<label for="r23in"> shin length </label>
+	<label for="r23in"> tibia length </label>
 	<input id="r23in" type="range">
 	<output id="r23out" for="r23in">  </output>
 	<br>
 	
-	<label for="r34in"> thigh length </label>
+	<label for="r34in"> femur length </label>
 	<input id="r34in" type="range">
 	<output id="r34out" for="r34in">  </output>
 	<br>
@@ -33,14 +33,20 @@
 	<output id="r45out" for="r45in">  </output>
 	<br>
 	
+	<label for="weightin"> barbell weight </label>
+	<input id="weightin" type="range">
+	<output id="weightout" for="weightin">  </output>
 	<br>
 	
-	<label for="kneein"> knee/(knee+hip) torque </label>
+	
+	<br>
+	
+	<label for="kneein"> knee vs hip </label>
 	<input id="kneein" type="range">
 	<output id="kneeout" for="kneein">  </output>
 	<br>
 	
-	<label for="alphain"> thigh angle </label>
+	<label for="alphain"> femur angle </label>
 	<input id="alphain" type="range">
 	<output id="alphaout" for="alphain">  </output>
 	<br>
@@ -60,6 +66,7 @@
 	var r23 = 50;
 	var r34 = 40;
 	var r45 = 75;
+	var weight = 100;
 	
 	//var phi = 45*2*Math.PI/360;
 	var alpha = 0;
@@ -71,12 +78,25 @@
 	var img = new Image();
 	img.src = 'Unbenannt.gif';
 	
+	var img_torso = new Image();
+	img_torso.src = 'torso.gif';
+	
+	var img_femur = new Image();
+	img_femur.src = 'femur.gif';
+	
+	var img_tibia = new Image();
+	img_tibia.src = 'tibia.gif';
+	
+	var img_foot = new Image();
+	img_foot.src = 'foot.gif';
+	
 	
 	window.onload = atStart;
 	document.getElementById("r12in").addEventListener("input",update);
 	document.getElementById("r23in").addEventListener("input",update);
 	document.getElementById("r34in").addEventListener("input",update);
 	document.getElementById("r45in").addEventListener("input",update);
+	document.getElementById("weightin").addEventListener("input",update);
 	document.getElementById("kneein").addEventListener("input",update);
 	document.getElementById("alphain").addEventListener("input",update);
 	
@@ -102,9 +122,12 @@
 		document.getElementById("r45in").max = 2*r45; 
 		//document.getElementById("r45in").min = 0.5*r45; 
 		
+		document.getElementById("weightin").value = weight; 
+		document.getElementById("weightin").max = 4*weight; 
+		
 		document.getElementById("kneein").value = 0.5*knee; 
 		document.getElementById("kneein").max = 1.0*knee; 
-		document.getElementById("kneein").min = -0.25*knee; 
+		document.getElementById("kneein").min = -0.5*knee; 
 		
 		document.getElementById("alphain").value = 0; 
 		document.getElementById("alphain").max = 95; 
@@ -127,6 +150,9 @@
 
 		r45 = document.getElementById("r45in").value; 
 		document.getElementById("r45out").innerHTML = r45 + "cm";
+		
+		weight = document.getElementById("weightin").value; 
+		document.getElementById("weightout").innerHTML = weight + "kg";
 		
 		knee = document.getElementById("kneein").value; 
 		document.getElementById("kneeout").innerHTML = knee + "%";
@@ -171,10 +197,10 @@
 		
 		ctx.clearRect(0, 0, width, height); 
 		
-		drawImg(img,x1,y1,x2,y2);
-		drawImg(img,x2,y2,x3,y3);
-		drawImg(img,x3,y3,x4,y4);
-		drawImg(img,x4,y4,x5,y5);
+		drawImg(img_foot,x1,y1,x2,y2);
+		drawImg(img_tibia,x2,y2,x3,y3);
+		drawImg(img_femur,x3,y3,x4,y4);
+		drawImg(img_torso,x4,y4,x5,y5);
 		
 		ctx.beginPath();
 		ctx.moveTo(x1, y1);
@@ -184,8 +210,14 @@
 		ctx.lineTo(x5, y5);
 		ctx.stroke(); 
 		
+		ctx.font = "25px Arial";
+		
+		ctx.fillText(((x3-x5)*0.01*weight*9.81).toFixed(0)+" Nm", x3+20,y3);
+		ctx.fillText(((x5-x4)*0.01*weight*9.81).toFixed(0)+" Nm", x4-100,y4);
+		ctx.fillText( weight+" kg", x5, y5-20-Math.sqrt(weight) );
+		
 		ctx.beginPath();
-		ctx.arc(x5, y5, 10, 0, 2 * Math.PI);
+		ctx.arc(x5, y5, 2*Math.sqrt(weight), 0, 2 * Math.PI);
 		ctx.fill(); 		
 		ctx.stroke(); 
 		
