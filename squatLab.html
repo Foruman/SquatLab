@@ -33,6 +33,13 @@
 	<output id="r45out" for="r45in">  </output>
 	<br>
 	
+	<br>
+	
+	<label for="r56in"> barbell depth </label>
+	<input id="r56in" type="range">
+	<output id="r56out" for="r56in">  </output>
+	<br>
+	
 	<label for="weightin"> barbell weight </label>
 	<input id="weightin" type="range">
 	<output id="weightout" for="weightin">  </output>
@@ -41,7 +48,7 @@
 	
 	<br>
 	
-	<label for="kneein"> knee vs hip </label>
+	<label for="kneein"> knee engagement </label>
 	<input id="kneein" type="range">
 	<output id="kneeout" for="kneein">  </output>
 	<br>
@@ -66,13 +73,14 @@
 	var r23 = 50;
 	var r34 = 40;
 	var r45 = 75;
+	var r56 = 10;
 	var weight = 100;
 	
 	//var phi = 45*2*Math.PI/360;
 	var alpha = 0;
 	var knee = 100;
 	
-	var x1,y1,x2,y2,x3,y3,x4,y4,x5,y5;
+	var x1,y1,x2,y2,x3,y3,x4,y4,x5,y5,x6,y6;
 	
 	
 	var img = new Image();
@@ -96,6 +104,7 @@
 	document.getElementById("r23in").addEventListener("input",update);
 	document.getElementById("r34in").addEventListener("input",update);
 	document.getElementById("r45in").addEventListener("input",update);
+	document.getElementById("r56in").addEventListener("input",update);
 	document.getElementById("weightin").addEventListener("input",update);
 	document.getElementById("kneein").addEventListener("input",update);
 	document.getElementById("alphain").addEventListener("input",update);
@@ -121,6 +130,9 @@
 		document.getElementById("r45in").value = r45; 
 		document.getElementById("r45in").max = 2*r45; 
 		//document.getElementById("r45in").min = 0.5*r45; 
+		
+		document.getElementById("r56in").value = r56; 
+		document.getElementById("r56in").max = 0.5*r45; 
 		
 		document.getElementById("weightin").value = weight; 
 		document.getElementById("weightin").max = 4*weight; 
@@ -150,6 +162,9 @@
 
 		r45 = document.getElementById("r45in").value; 
 		document.getElementById("r45out").innerHTML = r45 + "cm";
+		
+		r56 = document.getElementById("r56in").value; 
+		document.getElementById("r56out").innerHTML = r56 + "cm";
 		
 		weight = document.getElementById("weightin").value; 
 		document.getElementById("weightout").innerHTML = weight + "kg";
@@ -207,17 +222,17 @@
 		ctx.lineTo(x2, y2);
 		ctx.lineTo(x3, y3);
 		ctx.lineTo(x4, y4);
-		ctx.lineTo(x5, y5);
+		ctx.lineTo(x6, y6);
 		ctx.stroke(); 
 		
 		ctx.font = "25px Arial";
 		
-		ctx.fillText(((x3-x5)*0.01*weight*9.81).toFixed(0)+" Nm", x3+20,y3);
-		ctx.fillText(((x5-x4)*0.01*weight*9.81).toFixed(0)+" Nm", x4-100,y4);
+		ctx.fillText(((x3-x6)*0.01*weight*9.81).toFixed(0)+" Nm", x3+20,y3);
+		ctx.fillText(((x6-x4)*0.01*weight*9.81).toFixed(0)+" Nm", x4-100,y4);
 		ctx.fillText( weight+" kg", x5, y5-20-Math.sqrt(weight) );
 		
 		ctx.beginPath();
-		ctx.arc(x5, y5, 2*Math.sqrt(weight), 0, 2 * Math.PI);
+		ctx.arc(x6, y6, 2*Math.sqrt(weight), 0, 2 * Math.PI);
 		ctx.fill(); 		
 		ctx.stroke(); 
 		
@@ -239,7 +254,7 @@
 		
 		ctx.beginPath();
 		ctx.moveTo(x0, y0);
-		ctx.lineTo(x5, y5);
+		ctx.lineTo(x6, y6);
 		
 		ctx.moveTo(x0, y3);
 		ctx.lineTo(x3, y3);
@@ -277,8 +292,11 @@
 		else
 			y4 = y3+Math.pow(r34*r34-(x4-x3)*(x4-x3),0.5);
 		
-		x5 = x0;
-		y5 = y4-Math.pow(r45*r45-(x5-x4)*(x5-x4),0.5);
+		x6 = x0;
+		y6 = y4-Math.pow((r45-r56)*(r45-r56)-(x6-x4)*(x6-x4),0.5);
+		
+		x5 = x4 + (x6-x4)*r45/(r45-r56)
+		y5 = y4 + (y6-y4)*r45/(r45-r56)
 			
 	}
 	
