@@ -1,3 +1,3 @@
 ## SquatLab
 
-Play with anatomy and form at [foruman.github.io/SquatLab](foruman.github.io/SquatLab) 
+Play with anatomy and form at [https://foruman.github.io/SquatLab](https://foruman.github.io/SquatLab) 
