@@ -12,6 +12,32 @@
 	<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
 	</canvas> 
 	<br>
+	
+	<br>
+	
+	<label for="alphain"> femur angle </label>
+	<input id="alphain" type="range">
+	<output id="alphaout" for="alphain">  </output>
+	<br>
+	
+	<label for="kneein"> knee engagement </label>
+	<input id="kneein" type="range">
+	<output id="kneeout" for="kneein">  </output>
+	<br>
+	
+	<br>
+	
+	<label for="r56in"> barbell depth </label>
+	<input id="r56in" type="range">
+	<output id="r56out" for="r56in">  </output>
+	<br>
+	
+	<label for="weightin"> barbell weight </label>
+	<input id="weightin" type="range">
+	<output id="weightout" for="weightin">  </output>
+	<br>
+	
+	<br>
 
 	<label for="r12in"> foot length </label>
 	<input id="r12in" type="range">
@@ -33,29 +59,6 @@
 	<output id="r45out" for="r45in">  </output>
 	<br>
 	
-	<br>
-	
-	<label for="r56in"> barbell depth </label>
-	<input id="r56in" type="range">
-	<output id="r56out" for="r56in">  </output>
-	<br>
-	
-	<label for="weightin"> barbell weight </label>
-	<input id="weightin" type="range">
-	<output id="weightout" for="weightin">  </output>
-	<br>
-	
-	
-	<br>
-	
-	<label for="kneein"> knee engagement </label>
-	<input id="kneein" type="range">
-	<output id="kneeout" for="kneein">  </output>
-	<br>
-	
-	<label for="alphain"> femur angle </label>
-	<input id="alphain" type="range">
-	<output id="alphaout" for="alphain">  </output>
 	<br>
 	
 </body>
@@ -132,7 +135,7 @@
 		//document.getElementById("r45in").min = 0.5*r45; 
 		
 		document.getElementById("r56in").value = r56; 
-		document.getElementById("r56in").max = 0.5*r45; 
+		document.getElementById("r56in").max = 0.25*r45; 
 		
 		document.getElementById("weightin").value = weight; 
 		document.getElementById("weightin").max = 4*weight; 
@@ -227,8 +230,9 @@
 		
 		ctx.font = "25px Arial";
 		
-		ctx.fillText(((x3-x6)*0.01*weight*9.81).toFixed(0)+" Nm", x3+20,y3);
-		ctx.fillText(((x6-x4)*0.01*weight*9.81).toFixed(0)+" Nm", x4-100,y4);
+		ctx.fillText(((x3-x6)*0.01*weight*9.81).toFixed(0)+" Nm", x3+20,y3); //knee
+		ctx.fillText(((x6-x4)*0.01*weight*9.81).toFixed(0)+" Nm", x4-100,y4); //hip
+		ctx.fillText(((x6-(x4+(x5-x4)*0.3))*0.01*weight*9.81).toFixed(0)+" Nm", x4+(x5-x4)*0.3-100,y4+(y5-y4)*0.3); //lower back
 		ctx.fillText( weight+" kg", x5, y5-20-Math.sqrt(weight) );
 		
 		ctx.beginPath();
@@ -261,6 +265,11 @@
 		
 		ctx.moveTo(x0, y4);
 		ctx.lineTo(x4, y4);
+		
+		//ctx.moveTo((x5-x4)*0.5, (y5-y4)*0.5);
+		//ctx.lineTo(x5, (y5-y4)/2);
+		ctx.moveTo(x4+(x5-x4)*0.3, y4+(y5-y4)*0.3);
+		ctx.lineTo(x6, y4+(y5-y4)*0.3);
 		
 		ctx.stroke(); 	
 		ctx.strokeStyle = "black";
